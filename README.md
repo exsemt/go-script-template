@@ -2,10 +2,14 @@
 
 This is a simple GoLang script template.
 
+* CLI example
+
 ## How to run
 
 ```sh
 go run main.go
+# or
+go run main.go --help
 ```
 
 ## More info
