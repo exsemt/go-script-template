@@ -4,9 +4,9 @@ This is a simple GoLang script template.
 
 ## How to run
 
-'''sh
+```sh
 go run main.go
-'''
+```
 
 ## More info
 
