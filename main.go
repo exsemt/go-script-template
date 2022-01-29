@@ -11,10 +11,13 @@ import (
 func main() {
 	fmt.Println("I am GoLang script!")
 
-	cli_example()
+	cliExample()
 }
 
-func cli_example() {
+func cliExample() {
+	// https://github.com/urfave/cli/blob/master/docs/v2/manual.md
+	fmt.Println("### CLI example ###")
+
 	app := &cli.App{
 		Name:  "GoLang script",
 		Usage: "CLI example",
