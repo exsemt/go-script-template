@@ -1,9 +1,12 @@
 package main
 
 import (
+	"encoding/csv"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/urfave/cli/v2" // imports as package "cli"
 )
@@ -12,6 +15,17 @@ func main() {
 	fmt.Println("I am GoLang script!")
 
 	cliExample()
+
+	records := csvRead("./data/example.csv")
+	fmt.Println(records)
+
+	newFilePath := "tmp/new.csv"
+	csvWrite(records, newFilePath)
+	content, err := ioutil.ReadFile(newFilePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(string(content))
 }
 
 func cliExample() {
@@ -40,5 +54,63 @@ func cliExample() {
 	err := app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)
+	}
+}
+
+func csvRead(filePath string) []csvRow {
+	fmt.Println("### CSV read ###")
+
+	file, err := os.Open(filePath)
+	if err != nil {
+		log.Fatal("Unable to read input file "+filePath, err)
+	}
+	defer file.Close()
+
+	csvReader := csv.NewReader(file)
+	rows, err := csvReader.ReadAll()
+	if err != nil {
+		log.Fatal("Unable to parse file as CSV for "+filePath, err)
+	}
+
+	records := make([]csvRow, 0)
+	for _, row := range rows {
+		if row[0] == "id" {
+			continue
+		}
+
+		id, _ := strconv.ParseInt(row[0], 10, 64)
+		foo, _ := strconv.ParseInt(row[1], 10, 64)
+		bar, _ := strconv.ParseInt(row[2], 10, 64)
+
+		records = append(records, csvRow{id: id, foo: foo, bar: bar})
+	}
+
+	return records
+}
+
+type csvRow struct {
+	id  int64
+	foo int64
+	bar int64
+}
+
+func csvWrite(records []csvRow, filePath string) {
+	fmt.Println("### CSV write ###")
+
+	f, err := os.Create(filePath)
+	if err != nil {
+		log.Fatalln("failed to open file", err)
+	}
+	defer f.Close()
+
+	w := csv.NewWriter(f)
+	defer w.Flush()
+
+	w.Write([]string{"id", "foo", "bar"})
+	for _, record := range records {
+		newRow := []string{fmt.Sprint(record.id + 1), fmt.Sprint(record.foo + 2), fmt.Sprint(record.bar + 3)}
+		if err := w.Write(newRow); err != nil {
+			log.Fatalln("error writing record to file", err)
+		}
 	}
 }

@@ -3,6 +3,8 @@
 This is a simple GoLang script template.
 
 * CLI example
+* CSV read
+* CSV write
 
 ## How to run
 
