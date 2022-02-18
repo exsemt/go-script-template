@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/csv"
 	"fmt"
+	"go-script-template/pkg/netHttp"
 	"io/ioutil"
 	"log"
 	"os"
@@ -14,11 +15,14 @@ import (
 func main() {
 	fmt.Println("I am GoLang script!")
 
+	fmt.Println("### CLI example ###")
 	cliExample()
 
+	fmt.Println("### CSV read ###")
 	records := csvRead("./data/example.csv")
 	fmt.Println(records)
 
+	fmt.Println("### CSV write ###")
 	newFilePath := "tmp/new.csv"
 	csvWrite(records, newFilePath)
 	content, err := ioutil.ReadFile(newFilePath)
@@ -26,12 +30,14 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println(string(content))
+
+	fmt.Println("### net/http ###")
+	body := netHttp.GetBody("https://raw.githubusercontent.com/exsemt/ruby-script-template/master/data/example.json")
+	fmt.Println("Body:", body)
 }
 
 func cliExample() {
 	// https://github.com/urfave/cli/blob/master/docs/v2/manual.md
-	fmt.Println("### CLI example ###")
-
 	app := &cli.App{
 		Name:  "GoLang script",
 		Usage: "CLI example",
@@ -58,8 +64,6 @@ func cliExample() {
 }
 
 func csvRead(filePath string) []csvRow {
-	fmt.Println("### CSV read ###")
-
 	file, err := os.Open(filePath)
 	if err != nil {
 		log.Fatal("Unable to read input file "+filePath, err)
@@ -95,8 +99,6 @@ type csvRow struct {
 }
 
 func csvWrite(records []csvRow, filePath string) {
-	fmt.Println("### CSV write ###")
-
 	f, err := os.Create(filePath)
 	if err != nil {
 		log.Fatalln("failed to open file", err)

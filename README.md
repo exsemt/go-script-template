@@ -5,6 +5,7 @@ This is a simple GoLang script template.
 * CLI example
 * CSV read
 * CSV write
+* net/http
 
 ## How to run
 
